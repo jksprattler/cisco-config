@@ -1,0 +1,56 @@
+!########################################
+!#
+!# 	ASA2 Basic SSH Config
+!#
+!########################################
+
+config t
+!
+hostname PIX2
+!
+!
+!#########################################
+!# NOTE: the enable password here is cisco
+!#########################################
+enable password cisco
+!
+interface Ethernet0/0
+ nameif outside
+ security-level 0
+ ip address 192.168.2.2 255.255.255.0 
+ no shutdown 
+!
+!
+interface Ethernet0/1
+ nameif inside
+ security-level 100
+ ip address 10.0.2.1 255.255.255.0
+ no shutdown  
+!
+!
+interface Ethernet0/2
+ nameif DMZ
+ security-level 50
+ ip address 172.16.2.1 255.255.255.0 
+ no shutdown 
+!
+!
+global (outside) 1 192.168.2.20-192.168.2.50
+global (DMZ) 1 172.16.2.20-172.16.2.50
+nat (inside) 1 10.0.2.0 255.255.255.0
+!
+!
+route outside 0.0.0.0 0.0.0.0 192.168.2.1 1
+!
+!
+!######################################
+!# Generate RSA Keys for SSH
+!######################################
+crypto key generate rsa modulus 512
+!
+!#####################################
+!# SSH configuration
+!#####################################
+aaa authentication ssh console LOCAL
+ssh 10.0.2.0 255.255.255.0 inside
+username student password student privilege 15

@@ -1,0 +1,206 @@
+pod1-sw#show run
+Building configuration...
+
+Current configuration : 3981 bytes
+!
+! Last configuration change at 00:56:22 UTC Wed Apr 30 2014 by student
+! NVRAM config last updated at 00:56:25 UTC Wed Apr 30 2014 by student
+!
+version 12.2
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname pod1-sw
+!
+boot-start-marker
+boot-end-marker
+!
+logging count
+logging buffered 262144
+enable secret 5 $1$pjk/$3Vsyeb1uBvSJvgrgBAUYc0
+!
+username student privilege 15 secret 5 $1$Q2V7$sNe94hpdb61tzTIuu1ka8.
+aaa new-model
+!
+!
+aaa authentication login default group tacacs+ local
+aaa authorization exec default group tacacs+ local
+aaa authorization commands 1 default group tacacs+ local
+aaa authorization commands 15 default group tacacs+ local
+aaa accounting exec default start-stop group tacacs+
+aaa accounting commands 1 default start-stop group tacacs+
+aaa accounting commands 15 default start-stop group tacacs+
+aaa accounting connection default start-stop group tacacs+
+aaa accounting system default start-stop group tacacs+
+!
+!
+!
+aaa session-id common
+system mtu routing 1500
+ip subnet-zero
+!
+!
+ip domain-name skynet.local
+!
+!
+!
+!
+!
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree etherchannel guard misconfig
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+ip ssh version 2
+ip scp server enable
+!
+!
+interface FastEthernet0/1
+ switchport access vlan 10
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet0/2
+ switchport access vlan 10
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet0/3
+ switchport access vlan 20
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet0/4
+ switchport access vlan 20
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet0/5
+ switchport access vlan 30
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet0/6
+ switchport access vlan 30
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet0/7
+ switchport access vlan 40
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet0/8
+ switchport access vlan 40
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet0/9
+ switchport access vlan 50
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet0/10
+ switchport access vlan 50
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet0/11
+ switchport access vlan 60
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet0/12
+ switchport access vlan 60
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet0/13
+ shutdown
+!
+interface FastEthernet0/14
+ shutdown
+!
+interface FastEthernet0/15
+ shutdown
+!
+interface FastEthernet0/16
+ shutdown
+!
+interface FastEthernet0/17
+ shutdown
+!
+interface FastEthernet0/18
+ shutdown
+!
+interface FastEthernet0/19
+ shutdown
+!
+interface FastEthernet0/20
+ shutdown
+!
+interface FastEthernet0/21
+ shutdown
+!
+interface FastEthernet0/22
+ shutdown
+!
+interface FastEthernet0/23
+ shutdown
+!
+interface FastEthernet0/24
+ shutdown
+!
+interface GigabitEthernet0/1
+ switchport trunk allowed vlan 99
+ switchport mode trunk
+ shutdown
+!
+interface GigabitEthernet0/2
+ switchport trunk allowed vlan 10,20,30,40,50,60,70,99
+ switchport mode trunk
+!
+interface Vlan1
+ no ip address
+ no ip route-cache
+ shutdown
+!
+interface Vlan99
+ ip address 10.0.99.11 255.255.255.0
+ no ip route-cache
+!
+ip default-gateway 10.0.99.1
+no ip http server
+no ip http secure-server
+logging trap debugging
+logging host 10.0.70.17 session-id hostname
+access-list 10 permit 10.0.99.0 0.0.0.255
+access-list 10 permit 10.0.30.0 0.0.0.255
+access-list 10 deny   any log
+tacacs-server host 10.0.70.17 timeout 5
+tacacs-server directed-request
+tacacs-server key student
+!
+control-plane
+!
+!
+line con 0
+ logging synchronous
+line vty 0 4
+ access-class 10 in
+ logging synchronous
+ transport input ssh
+line vty 5 15
+ access-class 10 in
+ logging synchronous
+ transport input ssh
+!
+ntp clock-period 36028495
+ntp server 10.0.70.17
+end

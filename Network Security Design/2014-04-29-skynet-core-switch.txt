@@ -1,0 +1,396 @@
+SKYNET-CORE-SWITCH#show run
+Building configuration...
+
+Current configuration : 9184 bytes
+!
+version 12.2
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname SKYNET-CORE-SWITCH
+!
+boot-start-marker
+boot-end-marker
+!
+enable secret 5 $1$meXG$PA9mtEbZD.eNR68pHDUNg1
+!
+username skynet privilege 15 secret 5 $1$Ehly$wn8CTldFkDEeuhphi5CzT.
+username student privilege 15 secret 5 $1$dsuV$wP8Wi2Q7quKoQ1osUk8sO.
+!
+!
+aaa new-model
+!
+!
+aaa authentication login default group tacacs+ local
+aaa authorization exec default group tacacs+ local
+aaa authorization commands 1 default group tacacs+ local
+aaa authorization commands 15 default group tacacs+ local
+aaa accounting exec default start-stop group tacacs+
+aaa accounting commands 1 default start-stop group tacacs+
+aaa accounting commands 15 default start-stop group tacacs+
+aaa accounting connection default start-stop group tacacs+
+aaa accounting system default start-stop group tacacs+
+!
+!
+!
+aaa session-id common
+switch 1 provision ws-c3750-48ts
+system mtu routing 1500
+ip domain-name skynet.local
+ip name-server 8.8.8.8
+!
+!
+!
+!
+crypto pki trustpoint TP-self-signed-3760176896
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-3760176896
+ revocation-check none
+ rsakeypair TP-self-signed-3760176896
+!
+crypto pki trustpoint HTTPS_SS_CERT_KEYPAIR
+ enrollment selfsigned
+ serial-number
+ revocation-check none
+ rsakeypair HTTPS_SS_CERT_KEYPAIR
+!
+!
+crypto pki certificate chain TP-self-signed-3760176896
+crypto pki certificate chain HTTPS_SS_CERT_KEYPAIR
+ certificate self-signed 01
+  308202CB 30820234 A0030201 02020101 300D0609 2A864886 F70D0101 04050030
+  6B312830 26060355 0403131F 534B594E 45542D43 4F52452D 53574954 43482E73
+  6B796E65 742E6C6F 63616C31 3F300F06 03550405 13084530 31464246 3030302C
+  06092A86 4886F70D 01090216 1F534B59 4E45542D 434F5245 2D535749 5443482E
+  736B796E 65742E6C 6F63616C 301E170D 39333033 30313030 33353030 5A170D32
+  30303130 31303030 3030305A 306B3128 30260603 55040313 1F534B59 4E45542D
+  434F5245 2D535749 5443482E 736B796E 65742E6C 6F63616C 313F300F 06035504
+  05130845 30314642 46303030 2C06092A 864886F7 0D010902 161F534B 594E4554
+  2D434F52 452D5357 49544348 2E736B79 6E65742E 6C6F6361 6C30819F 300D0609
+  2A864886 F70D0101 01050003 818D0030 81890281 8100D824 8EC1672A D0FC7BE4
+  AD40EF4F 13DCC0CB D902CB48 3299C8F9 8F6FDBE4 1B6F393A 72CFF724 E94E67B6
+  4CB7A3BC 4CB3AAB8 5DD8B7C7 5DAB46EE 2451B8FB 3C228EE2 B6BD9496 9324C9BF
+  E65D5264 E4B37D45 C1F5E89D 11CE08E0 939B78EE 775A3392 61B87FD5 D1B7527B
+  C26F714C 81CE9770 B16567AC 55E2A2DE 935323A0 59450203 010001A3 7F307D30
+  0F060355 1D130101 FF040530 030101FF 302A0603 551D1104 23302182 1F534B59
+  4E45542D 434F5245 2D535749 5443482E 736B796E 65742E6C 6F63616C 301F0603
+  551D2304 18301680 149D798E 6E49DF18 CFB65601 B431AA7E 99D3010C 6E301D06
+  03551D0E 04160414 9D798E6E 49DF18CF B65601B4 31AA7E99 D3010C6E 300D0609
+  2A864886 F70D0101 04050003 818100B2 BA57CA79 F3476BEB 8D3712F5 F080F1EC
+  BDA054F3 BEDA2E94 F720F5AB F41DED24 A0B978B9 26A3FBC8 0724679F 798EF4AF
+  FC90D914 0C362437 D4A4BB66 4244756C AD6EA3D9 244B6F58 8B0017F5 9E5C2CD7
+  01EB6D21 3C6806FE 96B7E64D 301B75CB 26C454D7 A50F60A8 F87F76E5 CDA957DC
+  062B8CA4 7E774743 93AEDAE4 46F349
+  quit
+!
+!
+!
+!
+spanning-tree mode rapid-pvst
+spanning-tree extend system-id
+spanning-tree vlan 1-1000 priority 0
+!
+vlan internal allocation policy ascending
+!
+ip ssh version 2
+!
+!
+interface FastEthernet1/0/1
+ switchport access vlan 100
+ switchport mode access
+ shutdown
+!
+interface FastEthernet1/0/2
+ switchport access vlan 100
+ switchport mode access
+ shutdown
+!
+interface FastEthernet1/0/3
+ switchport access vlan 100
+ switchport mode access
+ shutdown
+!
+interface FastEthernet1/0/4
+ switchport access vlan 100
+ switchport mode access
+ shutdown
+!
+interface FastEthernet1/0/5
+ switchport access vlan 100
+ switchport mode access
+ shutdown
+!
+interface FastEthernet1/0/6
+ switchport access vlan 100
+ switchport mode access
+ shutdown
+!
+interface FastEthernet1/0/7
+ switchport access vlan 100
+ switchport mode access
+ shutdown
+!
+interface FastEthernet1/0/8
+ switchport access vlan 100
+ switchport mode access
+ shutdown
+!
+interface FastEthernet1/0/9
+ switchport access vlan 100
+ switchport mode access
+ shutdown
+!
+interface FastEthernet1/0/10
+ switchport access vlan 100
+ switchport mode access
+ shutdown
+!
+interface FastEthernet1/0/11
+ switchport access vlan 100
+ switchport mode access
+ shutdown
+!
+interface FastEthernet1/0/12
+ switchport access vlan 100
+ switchport mode access
+ shutdown
+!
+interface FastEthernet1/0/13
+ switchport access vlan 100
+ switchport mode access
+ shutdown
+!
+interface FastEthernet1/0/14
+ switchport access vlan 100
+ switchport mode access
+ shutdown
+!
+interface FastEthernet1/0/15
+ switchport access vlan 100
+ switchport mode access
+ shutdown
+!
+interface FastEthernet1/0/16
+ switchport access vlan 100
+ switchport mode access
+ shutdown
+!
+interface FastEthernet1/0/17
+ switchport access vlan 70
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet1/0/18
+ switchport access vlan 70
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet1/0/19
+ switchport access vlan 70
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet1/0/20
+ switchport access vlan 70
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet1/0/21
+ switchport access vlan 70
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet1/0/22
+ switchport access vlan 70
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet1/0/23
+ switchport access vlan 70
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet1/0/24
+ switchport access vlan 70
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet1/0/25
+ switchport access vlan 70
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet1/0/26
+ switchport access vlan 70
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet1/0/27
+ switchport access vlan 70
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet1/0/28
+ switchport access vlan 70
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet1/0/29
+ switchport access vlan 70
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet1/0/30
+ switchport access vlan 70
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet1/0/31
+ switchport access vlan 70
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet1/0/32
+ switchport access vlan 70
+ switchport mode access
+ spanning-tree portfast
+!
+interface FastEthernet1/0/33
+ switchport access vlan 100
+ switchport mode access
+ shutdown
+!
+interface FastEthernet1/0/34
+ switchport access vlan 100
+ switchport mode access
+ shutdown
+!
+interface FastEthernet1/0/35
+ switchport access vlan 100
+ switchport mode access
+ shutdown
+!
+interface FastEthernet1/0/36
+ switchport access vlan 100
+ switchport mode access
+ shutdown
+!
+interface FastEthernet1/0/37
+ switchport trunk encapsulation dot1q
+ switchport trunk allowed vlan 10,20,30,40,50,60,70,99
+ switchport mode trunk
+!
+interface FastEthernet1/0/38
+ switchport access vlan 100
+ switchport mode access
+ shutdown
+!
+interface FastEthernet1/0/39
+ switchport access vlan 100
+ switchport mode access
+ shutdown
+!
+interface FastEthernet1/0/40
+ switchport access vlan 100
+ switchport mode access
+ shutdown
+!
+interface FastEthernet1/0/41
+ switchport access vlan 100
+ switchport mode access
+ shutdown
+!
+interface FastEthernet1/0/42
+ switchport access vlan 100
+ switchport mode access
+ shutdown
+!
+interface FastEthernet1/0/43
+ switchport access vlan 100
+ switchport mode access
+ shutdown
+!
+interface FastEthernet1/0/44
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet1/0/45
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet1/0/46
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet1/0/47
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface FastEthernet1/0/48
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface GigabitEthernet1/0/1
+ switchport access vlan 100
+ switchport mode access
+ shutdown
+!
+interface GigabitEthernet1/0/2
+ switchport access vlan 100
+ switchport mode access
+ shutdown
+!
+interface GigabitEthernet1/0/3
+ switchport access vlan 100
+ switchport mode access
+ shutdown
+!
+interface GigabitEthernet1/0/4
+ switchport access vlan 100
+ switchport mode access
+ shutdown
+!
+interface Vlan1
+ no ip address
+ no ip route-cache
+ no ip mroute-cache
+ shutdown
+!
+interface Vlan99
+ description MGMT
+ ip address 10.0.99.10 255.255.255.0
+ no ip route-cache
+ no ip mroute-cache
+!
+ip default-gateway 10.0.99.1
+ip classless
+ip route 0.0.0.0 0.0.0.0 10.0.99.1
+no ip http server
+no ip http secure-server
+!
+logging trap debugging
+tacacs-server host 10.0.70.17
+tacacs-server directed-request
+tacacs-server key student
+!
+banner motd ^C
+^C
+!
+line con 0
+ logging synchronous
+line vty 0
+ session-timeout 360
+ exec-timeout 360 0
+ logging synchronous
+ transport input ssh
+line vty 1 4
+ logging synchronous
+ transport input ssh
+line vty 5 15
+ logging synchronous
+ transport input ssh
+!
+end
+

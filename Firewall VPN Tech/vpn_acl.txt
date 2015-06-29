@@ -1,0 +1,72 @@
+!####################################
+!#
+!# VPN Access Control Lists
+!#
+!####################################
+access-list OUTSIDE_CRYPTOMAP_DYNAMIC_ACL extended permit ip any 11.0.1.0 255.255.255.0
+access-list INSIDE_OUTBOUND_NAT0_ACL extended permit ip 10.0.1.0 255.255.255.0 11.0.1.0 255.255.255.0 
+!###################################
+!#
+!# VPN Address Pool 
+!#
+!###################################
+ip local pool REMOTE_VPN_POOL 11.0.1.1-11.0.1.63
+!###################################
+!#
+!# Do not Translate VPN traffic
+!#
+!##################################
+nat (inside) 0 access-list INSIDE_OUTBOUND_NAT0_ACL
+!#####################################
+!#
+!# Group policy for VPN
+!# These are the things you would 
+!# hand out via DHCP 
+!# (dns-server,wins-server, default-domain
+!#
+!#####################################
+!
+group-policy REMOTE_VPN_GROUP_POLICY internal
+group-policy REMOTE_VPN_GROUP_POLICY attributes
+!
+!#####################################
+!#
+!#   ISAKMP Policy Config
+!#
+!#####################################
+!
+isakmp enable outside
+isakmp policy 20 authentication pre-share
+isakmp policy 20 encryption des
+isakmp policy 20 hash md5
+isakmp policy 20 group 2
+!
+!
+!#####################################
+!#
+!# Crypto Map Configuration
+!#
+!#####################################
+crypto ipsec transform-set ESP-DES-MD5 esp-des esp-md5-hmac
+
+crypto dynamic-map OUTSIDE_DYNAMIC_MAP 20 match address OUTSIDE_CRYPTOMAP_DYNAMIC_ACL
+
+crypto dynamic-map OUTSIDE_DYNAMIC_MAP 20 set transform-set ESP-DES-MD5
+
+crypto map OUTSIDE_MAP 10 ipsec-isakmp dynamic OUTSIDE_DYNAMIC_MAP
+
+crypto map OUTSIDE_MAP interface outside
+!
+!#####################################
+!#
+!#  Tunnel Group Config
+!#
+!#####################################
+tunnel-group REMOTE_VPN_TUNNEL_GROUP type remote-access
+
+tunnel-group REMOTE_VPN_TUNNEL_GROUP general-attributes
+ address-pool REMOTE_VPN_POOL
+ default-group-policy REMOTE_VPN_GROUP_POLICY
+
+tunnel-group REMOTE_VPN_TUNNEL_GROUP ipsec-attributes
+ pre-shared-key cisco

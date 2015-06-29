@@ -1,0 +1,76 @@
+!########################################
+!#
+!# 	ASA2 Web DMZ Config
+!#
+!########################################
+!
+config t
+!
+hostname PIX2
+!
+enable password cisco
+!
+interface Ethernet0/0
+ nameif outside
+ security-level 0
+ ip address 192.168.2.2 255.255.255.0 
+ no shutdown 
+!
+!
+interface Ethernet0/1
+ nameif inside
+ security-level 100
+ ip address 10.0.2.1 255.255.255.0
+ no shutdown  
+!
+!
+interface Ethernet0/2
+ nameif DMZ
+ security-level 50
+ ip address 172.16.2.1 255.255.255.0 
+ no shutdown 
+!
+!
+global (outside) 1 192.168.2.20-192.168.2.50
+global (DMZ) 1 172.16.2.20-172.16.2.50
+nat (inside) 1 10.0.2.0 255.255.255.0
+!
+route outside 0.0.0.0 0.0.0.0 192.168.2.1 1
+!
+!#####################################
+!# Static NAT mapping from outside to
+!# the DMZ
+!#####################################
+static (DMZ,outside) 192.168.2.10 172.16.2.2 netmask 255.255.255.255 
+!
+!
+!#####################################
+!# World to DMZ access-list
+!#####################################
+access-list WEB_TO_DMZ extended permit tcp any host 192.168.2.10 eq www 
+access-list WEB_TO_DMZ extended permit tcp any host 192.168.2.10 eq ftp 
+access-list WEB_TO_DMZ extended permit icmp any host 192.168.2.10 
+!
+!
+!#####################################
+!# Apply the access list to the outside
+!# interface
+!#####################################
+access-group WEB_TO_DMZ in interface outside
+!
+!
+aaa authentication ssh console LOCAL
+ssh 10.0.2.0 255.255.255.0 inside
+username student password student privilege 15
+!
+class-map inspection_default
+ match default-inspection-traffic
+!
+policy-map global_policy
+ class inspection_default
+  inspect icmp
+  inspect ftp 
+!
+service-policy global_policy global
+!
+crypto key generate rsa modulus 512

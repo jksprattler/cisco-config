@@ -1,0 +1,19 @@
+show run all failover
+show failover
+show failover state
+show vpn-sessiondb summary 
+show crypto isakmp sa 
+show service-policy
+show route
+show run route
+show cpu usage
+show memory
+copy run start
+
+show run crypto map
+show crypto isakmp sa  <--- Tunnels should display MM_ACTIVE not in WAIT states
+show vpn-sessiondb summary <--- Want to see Active sessions listed
+show vpn-sessiondb l2l <--- will give the details for each VPN session and what time it came back up
+show route
+show run nat
+Show cap <--- make sure captures have stopped and if they haven't do no cap capin
